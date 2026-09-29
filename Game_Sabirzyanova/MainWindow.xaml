@@ -66,10 +66,9 @@
             Grid.Column="1"
             MouseDown="AttackEnemy">
             <Grid>
-                <Image
-                    x:Name="emptyImage"
-                    Margin="10,10,10.2,185.4"
-                    Source="/Image/monster1.jpg"/>
+                <Image x:Name="monster1" Margin="10,10,10.2,185.4" Source="/Image/monster1.jpg" Visibility="Visible"/>
+                <Image x:Name="monster2" Margin="10,10,10.2,185.4" Source="/Image/monster2.jpg" Visibility="Hidden"/>
+                <Image x:Name="monster3" Margin="10,10,10.2,185.4" Source="/Image/monster3.jpg" Visibility="Hidden"/>
                 <Label
                     Content="Основные характеристики персонажа:"
                     HorizontalAlignment="Left"

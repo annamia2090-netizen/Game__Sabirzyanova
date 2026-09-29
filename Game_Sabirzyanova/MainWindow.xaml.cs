@@ -57,6 +57,24 @@ namespace Game_Sabirzyanova
                 Enemys[Id].Glasses,
                 Enemys[Id].Money,
                 Enemys[Id].Damage);
+            monster1.Visibility = System.Windows.Visibility.Hidden;
+            monster2.Visibility = System.Windows.Visibility.Hidden;
+            monster3.Visibility = System.Windows.Visibility.Hidden;
+            if (Id == 0)
+            {
+                monster1.Visibility = System.Windows.Visibility.Visible;
+            }
+            else if (Id == 1)
+            {
+                monster2.Visibility = System.Windows.Visibility.Visible;
+            }
+            else if (Id == 2)
+            {
+                monster3.Visibility = System.Windows.Visibility.Visible;
+            }
+
+            emptyHealth.Content = "Жизненные показатели: " + Enemy.Health;
+            emptyArmor.Content = "Броня: " + Enemy.Armor;
         }
         /// <summary> Метод, который наносит периодический урон игроку </summary>
         private void AttackPlayer(object sender, System.EventArgs e)
@@ -69,13 +87,21 @@ namespace Game_Sabirzyanova
         /// <summary> Метод, который наносит периодический урон врагу </summary>
         private void AttackEnemy(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            // Если игрок уже проиграл, кликать больше нельзя
+            if (Player.Health <= 0) return;
             // Наносим урон в процентном соотношении имеющейся брони
             Enemy.Health -= Convert.ToInt32(Player.Damage * 100f / (100f - Enemy.Armor));
             // Если жизненные показатели меньше или равны 0
             if (Enemy.Health <= 0)
             {
-                // Увеличиваем очки персонажа
-                Player.Glasses += Enemy.Glasses;
+                // Создаем генератор случайных чисел
+                Random rnd = new Random();
+                // Получаем процент бонуса до 30%
+                int Percent = rnd.Next(0, 31);
+                // Считаем, сколько это будет в очках опыта 
+                int Mnozitel = Convert.ToInt32(Enemy.Glasses * Percent / 100);
+                // Увеличиваем очки персонажа c добавлением множителя
+                Player.Glasses += (Enemy.Glasses + Mnozitel);
                 // Увеличиваем монеты персонажа
                 Player.Money += Enemy.Money;
                 // Обновляем информацию на UI
@@ -93,6 +119,15 @@ namespace Game_Sabirzyanova
         /// <summary> Повышение уровня и обновление данных на UI </summary>
         public void UserInfoPlayer()
         {
+            // Если здоровье упало до 0 или меньше
+            if (Player.Health <= 0)
+            {
+                Player.Health = 0; 
+                playerHealth.Content = "Жизненные показатели: 0";
+                dispatcherTimer.Stop(); // Останавливаем таймер
+                MessageBox.Show("Конец игры! Ваши жизненные показатели опустели.");
+                return; // Выходим из метода
+            }
             // Если уровень персонажа больше чем 100 * уровень персонажа
             if (Player.Glasses > 100 * Player.Level)
             {
