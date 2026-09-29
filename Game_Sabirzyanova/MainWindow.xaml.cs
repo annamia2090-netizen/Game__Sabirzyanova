@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Game_Sabirzyanova
 {
@@ -22,12 +23,29 @@ namespace Game_Sabirzyanova
     {
         /// <summary> Данные игрока </summary>
         public PersonInfo Player = new PersonInfo("Student", 100, 10, 1, 0, 0, 5);
+        /// <summary> Коллекция противников </summary>
+        public List<PersonInfo> Enemys = new List<PersonInfo>();
+        DispatcherTimer dispatcherTimer = new DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
             UserInfoPlayer();
+            // Добавляем данные о противниках в коллекцию
+            Enemys.Add(new PersonInfo("Название врага №1", 100, 20, 1, 15, 5, 20));
+            Enemys.Add(new PersonInfo("Название врага №2", 20, 5, 1, 5, 2, 5));
+            Enemys.Add(new PersonInfo("Название врага №3", 50, 3, 1, 10, 10, 15));
+            // Задаём настройки для таймера
+            dispatcherTimer.Tick += AttackPlayer;
+            // Задаём интервал с которым выполняется таймер
+            dispatcherTimer.Interval = new System.TimeSpan(0, 0, 10);
+            // Запускаем таймер
+            dispatcherTimer.Start();
         }
 
+        /// <summary> Метод, который наносит периодический урон игроку </summary>
+        private void AttackPlayer(object sender, System.EventArgs e)
+        {
+        }
         /// <summary> Повышение уровня и обновление данных на UI </summary>
         public void UserInfoPlayer()
         {
