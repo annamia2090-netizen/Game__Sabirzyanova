@@ -23,6 +23,7 @@ namespace Game_Sabirzyanova
     {
         /// <summary> Данные игрока </summary>
         public PersonInfo Player = new PersonInfo("Student", 100, 10, 1, 0, 0, 5);
+        public PersonInfo Enemy;
         /// <summary> Коллекция противников </summary>
         public List<PersonInfo> Enemys = new List<PersonInfo>();
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
@@ -40,11 +41,30 @@ namespace Game_Sabirzyanova
             dispatcherTimer.Interval = new System.TimeSpan(0, 0, 10);
             // Запускаем таймер
             dispatcherTimer.Start();
+            SelectEnemy();
         }
-
+        /// <summary> Выбор случайного противника </summary>
+        public void SelectEnemy()
+        {
+            // Выбираем случайный индекс противника
+            int Id = new Random().Next(0, Enemys.Count);
+            // Создаём экземпляр с данными противника
+            Enemy = new PersonInfo(
+                Enemys[Id].Name,
+                Enemys[Id].Health,
+                Enemys[Id].Armor,
+                Enemys[Id].Level,
+                Enemys[Id].Glasses,
+                Enemys[Id].Money,
+                Enemys[Id].Damage);
+        }
         /// <summary> Метод, который наносит периодический урон игроку </summary>
         private void AttackPlayer(object sender, System.EventArgs e)
         {
+            // Наносим урон в процентном соотношении имеющейся брони
+            Player.Health -= Convert.ToInt32(Enemy.Damage * 100f / (100f - Player.Armor));
+            // Обновляем характеристики персонажа
+            UserInfoPlayer();
         }
         /// <summary> Повышение уровня и обновление данных на UI </summary>
         public void UserInfoPlayer()
